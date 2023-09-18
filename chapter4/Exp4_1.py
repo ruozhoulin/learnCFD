@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Please tell me how do you create this matrix
 # 定义方程组的系数矩阵
 A = np.array([[300, -100, 0, 0, 0],
               [-100, 200, -100, 0, 0],
