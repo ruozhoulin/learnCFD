@@ -1,37 +1,39 @@
+#one-dimensional source-free heat conduction
 import numpy as np
-import matplotlib.pyplot as plt
-
-# Please tell me how doimport numpy as np
 import matplotlib.pyplot as plt
 
 # use more readable variable names
 # add unit of each variable
-# 基本条件
+# ========================================
+# basic conditions
+# ========================================
 nx = 5
-L = 0.5  # length, unit: meter
-k = 1000
-areaOfPipe = 0.01  # 单位: m^2
-Ta = 100  # temperature °C
-Tb = 500
+length = 0.5  #unit: meter
+k = 1000  #Thermal conductivity, unit:W/(m*k)
+areaOfPipe = 0.01  # unit: m^2
+temperatureA = 100  # unit: °C
+temperatureB = 500  # at both ends
 
-# coding style
-deltaX = L / nx
+deltaX = length / nx
 
-# 初始化
+# =========================================
+# Solve equations AT=B, we need T 
+# ========================================= 
 A = np.zeros((nx, nx))
-B = np.zeros((nx, 1))
+B = np.zeros(nx)
 
-Q = k * areaOfPipe / deltaX
+#Q is a calculated variable for convenience
+Q = k * areaOfPipe / deltaX 
 
 for i in range(nx):
     if i == 0:
         A[i, i + 1] = -Q
         A[i, i] = 3 * Q
-        B[i] = 2 * Q * Ta
+        B[i] = 2 * Q * temperatureA
     elif i == nx - 1:
         A[i, i - 1] = -Q
         A[i, i] = 3 * Q
-        B[i] = 2 * Q * Tb
+        B[i] = 2 * Q * temperatureB
     else:
         A[i, i - 1] = -Q
         A[i, i + 1] = -Q
