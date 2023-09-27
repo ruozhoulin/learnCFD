@@ -1,23 +1,21 @@
-# %%
-import pandas as pd
-
-phi = [1, 2, 3, 4, 6, 1, 2, 9]
-df = pd.DataFrame()
-df["asdfasdf"] = phi
-df["ad"] = phi
-
-df
-# %%
-df.to_csv("exp5_1.csv")
+#******************************************************************
+#**  Filename: Exp5_1.py
+#**  Copyright: An Introduction to Computational Fluid Dynamics THE FINITE VOLUME METHOD Second Edition 2007
+#**  Author: H K Versteeg and W Malalasekera
+#**  Creation Date : 20230926
+#**  Introdution: Exercise of example5.1 in P137
+#**               The central differencing scheme of one-dimensional convection and diffusion
+#******************************************************************
 
 # %%
-# Add a header including author, date, and sources.
 
-# one-dimensional convection and diffusion -central differencing scheme
+
+# %%
+
 import numpy as np
 import matplotlib.pyplot as plt
-from functions import center_difference
-
+from functions import central_difference 
+from functions import plot_figure_Ch5 
 # ========================================
 # basic conditions
 # ========================================
@@ -27,133 +25,73 @@ GAMMA = 0.1  # unit:kg/m*s
 phiA = 1
 phiB = 0  # boundary condition
 
-nx = 5
-
 
 # =========================================
 # Case1:u = 0.1 m/s
 # =========================================
+# input conditions
+nx=5
 u = 0.1
-# F = rho * u
-# D is ...
 
-ResultValue = center_difference(RHO, GAMMA, nx, length, u, phiA, phiB)
+# solve problem
+resultValue = central_difference(length, RHO, GAMMA, phiA, phiB, nx, u)
 
-############          plot  picture           #################################################################
+############### plot   picture ##############
+# Numerical Solution
 x = np.array([0, 0.1, 0.3, 0.5, 0.7, 0.9, 1.0])
-ResultValue = np.concatenate(([1.0], ResultValue, [0]))
-plt.scatter(x, ResultValue, marker="s", facecolors="r", label="Numerical Solution")
-plt.title(
-    "5.1 Comparison of the numerical result with the analytical solution for Case1",
-    fontname="Arial",
-    fontsize=12,
-)
+resultValue = np.concatenate(([phiA], resultValue, [phiB]))
+# Analytical Solution
 x_range = np.arange(0, 1.1, 0.1)
-# define
 y = (2.7183 - np.exp(x_range)) / 1.7183  # math.np只能单个数字，矩阵用np
-plt.plot(x_range, y, label="Analytical Solution")
-plt.grid(True)
-plt.ylabel("φ")
-max_y = np.max(y) + 0.2
-plt.ylim(0, max_y)
-plt.yticks(np.arange(0, max_y, 0.2))
-plt.gca().yaxis.set_minor_locator(plt.MultipleLocator(50))
-plt.xlabel("Distance X (m)")
-max_x = np.max(x)
-plt.xlim(0, max_x)
-plt.xticks(np.arange(0, max_x + 0.01, 0.2))
-plt.tick_params(axis="x", length=5, width=1)
-plt.gca().xaxis.set_minor_locator(plt.MultipleLocator(0.1))
-plt.box(True)
-plt.legend(loc="best")
-# plt.show()
+
+plot_figure_Ch5(x, resultValue, x_range, y)
+plt.title("5.1 Comparison of the numerical result with the analytical solution for Case1",
+    fontname="Arial",fontsize=12,)
+
+
 
 
 # =========================================
 # Case2:u = 2.5 m/s
 # =========================================
-
+# input conditions
 u = 2.5
-ResultValue = center_difference(RHO, GAMMA, nx, length, u, phiA, phiB)
+nx=5
+# solve problem
+resultValue = central_difference(length, RHO, GAMMA, phiA, phiB, nx, u)
 
-############          plot   picture         #################################################################
+############### plot   picture ##############
+# Numerical Solution
 x = np.array([0.1, 0.3, 0.5, 0.7, 0.9])
-plt.scatter(x, ResultValue, marker="s", facecolors="r", label="Numerical Solution")
-plt.plot(x, ResultValue, color="r")
-plt.title(
-    "5.1 Comparison of the numerical result with the analytical solution for Case2",
-    fontname="Arial",
-    fontsize=12,
-)
+# Analytical Solution
 x_range = np.arange(0, 1.0, 0.001)
-# define
-y = 1 + ((1 - np.exp(25 * x_range)) / (7.2 * 10**10))  # math.np只能单个数字，矩阵用np
-plt.plot(x_range, y, label="Analytical Solution")
-plt.grid(True)
-plt.ylabel("φ")
-max_y = np.max(ResultValue) + 0.2
-plt.ylim(0, max_y)
-plt.yticks(np.arange(0, max_y, 0.2))
-plt.gca().yaxis.set_minor_locator(plt.MultipleLocator(50))
-plt.xlabel("Distance X (m)")
-max_x = 1.2
-plt.xlim(0, max_x)
-plt.xticks(np.arange(0, max_x + 0.01, 0.2))
-plt.tick_params(axis="x", length=5, width=1)
-plt.gca().xaxis.set_minor_locator(plt.MultipleLocator(0.1))
-plt.box(True)
-plt.legend(loc="best")
-# plt.show()
+y = 1 + ((1 - np.exp(25 * x_range)) / (7.2 * 10**10))
+
+plot_figure_Ch5(x, resultValue, x_range, y)
+plt.title("5.1 Comparison of the numerical result with the analytical solution for Case2",
+    fontname="Arial",fontsize=12,)
+
 
 
 # =========================================
 # Case3:u = 2.5 m/s  grid 20
 # =========================================
-
+# input conditions
 nx = 20
 u = 2.5
-ResultValue = center_difference(RHO, GAMMA, nx, length, u, phiA, phiB)
 
-# --
+# solve problem
+resultValue = central_difference(length, RHO, GAMMA, phiA, phiB, nx, u)
+
+############### plot   picture ##############
+# Numerical Solution
 x = np.arange(0.025, 1.0, 0.05)
-# plot numerical solution
-plt.figure()  # create a new figure
-plt.plot(x, ResultValue, marker="s", label="Numerical Solution")
-
-# plot analitical solution
+# Analytical Solution
 x_range = np.arange(0, 1.0, 0.001)
-# define
 y = 1 + ((1 - np.exp(25 * x_range)) / (7.2 * 10**10))  # math.np只能单个数字，矩阵用np
-plt.plot(x_range, y, label="Analytical Solution")
+
+plot_figure_Ch5(x, resultValue, x_range, y)
+plt.title("5.1 Comparison of the numerical result with the analytical solution for Case3",
+    fontname="Arial",fontsize=12,)
 
 
-plt.legend(loc="best")
-plt.show()
-
-# ############          plot  picture          #################################################################
-# x = np.arange(0.025, 1.0, 0.05)
-# plt.scatter(x, ResultValue, marker="s", facecolors="r", label="Numerical Solution")
-# plt.title(
-#     "5.1 Comparison of the numerical result with the analytical solution for Case3",
-#     fontname="Arial",
-#     fontsize=12,
-# )
-# x_range = np.arange(0, 1.0, 0.001)
-# # define
-# y = 1 + ((1 - np.exp(25 * x_range)) / (7.2 * 10**10))  # math.np只能单个数字，矩阵用np
-# plt.plot(x_range, y, label="Analytical Solution")
-# plt.grid(True)
-# plt.ylabel("φ")
-# max_y = np.max(ResultValue) + 0.2
-# plt.ylim(0, max_y)
-# plt.yticks(np.arange(0, max_y, 0.2))
-# plt.gca().yaxis.set_minor_locator(plt.MultipleLocator(50))
-# plt.xlabel("Distance X (m)")
-# max_x = 1.2
-# plt.xlim(0, max_x)
-# plt.xticks(np.arange(0, max_x + 0.01, 0.2))
-# plt.tick_params(axis="x", length=5, width=1)
-# plt.gca().xaxis.set_minor_locator(plt.MultipleLocator(0.1))
-# plt.box(True)
-# plt.legend(loc="best")
-# plt.show()
